@@ -1,0 +1,5 @@
+<app-search (searchEvent)="search$.next($event)"></app-search>
+<div *ngIf="loading">Loading .......</div>
+<div *ngFor="let product of results$ | async">
+  {{ product.title }}
+</div>
