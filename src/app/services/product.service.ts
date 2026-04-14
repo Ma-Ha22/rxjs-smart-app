@@ -12,4 +12,14 @@ export class ProductService {
   getAll():Observable<IProduct[]>{
     return this.http.get<IProduct[]>(`https://fakestoreapi.com/products`);
   }
+  fakeAddToCartApi(id: number) {
+  return new Observable(observer => {
+    console.log('API called for:', id);
+
+    setTimeout(() => {
+      observer.next(true);
+      observer.complete();
+    }, 2000);
+  });
+}
 }

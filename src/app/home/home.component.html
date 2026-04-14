@@ -2,4 +2,5 @@
 <div *ngIf="loading">Loading .......</div>
 <div *ngFor="let product of results$ | async">
   {{ product.title }}
+  <button (click)="onAddToCart(product.id)">Add To Cart</button>
 </div>

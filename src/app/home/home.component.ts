@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchComponent } from '../search/search.component';
-import { debounceTime, delay, distinctUntilChanged, finalize, map, Observable, retryWhen, shareReplay, Subject, switchMap, tap } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, exhaustMap, finalize, map, Observable, retryWhen, shareReplay, Subject, switchMap, tap } from 'rxjs';
 import { ProductService } from '../services/product.service';
 import { IProduct } from '../interfaces/IProduct.interface';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
@@ -15,7 +15,7 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 export class HomeComponent implements OnInit{
   search$ = new Subject<string>();
   loading:boolean = false;
-
+  addToCart$ = new Subject<number>()
 
   results$ = this.search$.pipe(
       debounceTime(500),
@@ -37,9 +37,19 @@ export class HomeComponent implements OnInit{
 
   constructor(private _ProductService:ProductService){}
   ngOnInit(): void {
-    // this.search$.subscribe(console.log);
+    this.addToCart$.pipe(
+      tap(() => console.log('clicked')),
+      exhaustMap(
+        id=> this._ProductService.fakeAddToCartApi(id).pipe(
+        tap(() => console.log('Product added:', id))
+        )
+      )
+    ).subscribe();
 
       
   
+  }
+  onAddToCart(id:number){
+    this.addToCart$.next(id)
   }
 }
